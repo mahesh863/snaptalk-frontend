@@ -1,0 +1,35 @@
+.post-base {
+  min-height: 400px;
+  width: 100%;
+  /* border: 3px dashed black; */
+  margin-top: 30px;
+}
+
+.post-image {
+  width: 100%;
+  max-height: 740px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.icon {
+  font-size: 30px;
+}
+
+.heart-fill {
+  color: rgb(255, 64, 64);
+}
+
+.form-input {
+  width: 94%;
+}
+
+.send-icon {
+  width: 5%;
+  float: inline-end;
+  margin-top: -35px;
+}
+
+.comment-div {
+  margin-top: -8px;
+}

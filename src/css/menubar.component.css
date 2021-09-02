@@ -1,0 +1,10 @@
+@font-face {
+  font-family: Bravary;
+  src: url(../assets/Asteratty.ttf);
+}
+
+.branding {
+  font-family: Bravary;
+  color: rgb(7, 143, 233);
+  letter-spacing: 1px;
+}

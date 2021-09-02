@@ -1,0 +1,19 @@
+.my-post-card-base {
+  width: 99%;
+  margin: 3px;
+}
+
+.profile-post-image {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+@media only screen and (max-width: 600px) {
+  .my-post-card-base {
+    width: 45vw;
+    margin: 3px;
+    border-radius: 10px;
+  }
+}
