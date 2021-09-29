@@ -7,10 +7,6 @@ import "../css/signin.css";
 //Social Login
 import GoogleLogin from "react-google-login";
 
-//axios import
-import axios from "axios";
-import { API } from "../helper/API";
-
 //Reactstrap
 import { Form, FormGroup, Input, Label, Button } from "reactstrap";
 
@@ -20,6 +16,13 @@ import { Link } from "react-router-dom";
 //React-Toastify
 import { toast } from "react-toastify";
 
+//Helpers
+import { emailSignin, googleSignin } from "../helper/Calls/Auth";
+
+//Get Profile Helper
+import { getProfile } from "../helper/Calls/MyProfile";
+import { getAllInteractions } from "../helper/Calls/Friends";
+
 //dotenv
 require("dotenv").config();
 
@@ -28,32 +31,18 @@ const Signin = ({ history }) => {
   const [password, setPassword] = useState("");
 
   const handelSubmit = () => {
-    axios({
-      method: "POST",
-      url: `${API}/auth/signin`,
-      data: {
-        email: email,
-        password: password,
-      },
-    })
+    emailSignin(email, password)
       .then((res) => {
         console.log(res.data);
-        if (res.data?.user) {
-          localStorage.setItem("user", JSON.stringify(res.data?.user));
-          localStorage.setItem("token", res.data?.token);
+        localStorage.setItem("userId", JSON.stringify(res.data?.userId));
+        localStorage.setItem("token", res.data?.token);
 
-          toast.success(res.data?.message, {
-            position: "top-center",
-            autoClose: 1500,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
-
-          history.push("/");
-        }
+        getProfile(res.data?.userId, res.data?.token)
+          .then((res) => {
+            localStorage.setItem("user", JSON.stringify(res.data.user));
+            history.push("/");
+          })
+          .catch((err) => console.log(err));
       })
       .catch((err) => {
         if (err) {
@@ -72,32 +61,28 @@ const Signin = ({ history }) => {
   };
 
   const onSuccess = (googleData) => {
-    axios({
-      method: "POST",
-      url: "http://localhost:8000/api/auth/google",
-      data: {
-        token: googleData.tokenId,
-      },
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+    googleSignin(googleData.tokenId)
       .then((res) => {
-        if (res.data?.user) {
-          localStorage.setItem("user", JSON.stringify(res.data?.user));
+        if (res.data) {
+          localStorage.setItem("userId", JSON.stringify(res.data?.userId));
           localStorage.setItem("token", res.data?.token);
 
-          toast.success(res.data?.message, {
-            position: "top-center",
-            autoClose: 1500,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
+          getProfile(res.data?.userId, res.data?.token)
+            .then((res) => {
+              localStorage.setItem("user", JSON.stringify(res.data.user));
+              toast.success("SignIn Successful!", {
+                position: "top-center",
+                autoClose: 1500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              });
 
-          history.push("/");
+              history.push("/");
+            })
+            .catch((err) => console.log(err));
         }
       })
       .catch((err) => {
@@ -117,7 +102,15 @@ const Signin = ({ history }) => {
   };
 
   const onFailure = (err) => {
-    console.log("Err in google Signin");
+    toast.error("Please Try Again!", {
+      position: "top-center",
+      autoClose: 1500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
     history.push("/signup");
   };
 
@@ -160,7 +153,7 @@ const Signin = ({ history }) => {
           <GoogleLogin
             disabled={false}
             className="buttons"
-            clientId={progress.env.GOOGLE_CLIENT_ID}
+            clientId="163781510653-o7996ee5f0scidi1fdcdel6l868fffn5.apps.googleusercontent.com"
             buttonText="Login With Google"
             isSignedIn={true}
             onSuccess={onSuccess}

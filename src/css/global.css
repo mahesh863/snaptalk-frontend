@@ -8,11 +8,9 @@
 .buttons {
   width: 100%;
   margin-top: 10px;
-  background-color: black;
 }
 
 .buttons:hover {
   width: 100%;
   margin-top: 10px;
-  background-color: rgb(37, 37, 37);
 }

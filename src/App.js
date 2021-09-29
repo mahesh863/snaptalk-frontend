@@ -20,6 +20,9 @@ import Signup from "./pages/Signup";
 import Home from "./pages/Home";
 import MyProfile from "./pages/MyProfile";
 import Requests from "./pages/Requests";
+import Notification from "./pages/Notification";
+import AddPost from "./pages/AddPost";
+import Discover from "./pages/Discover";
 
 const App = () => {
   return (
@@ -28,11 +31,13 @@ const App = () => {
       <Menubar />
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route path="/signin" component={Signin} />
-        <Route path="/signup" component={Signup} />
-        <Route path="/notification" component={Notification} />
-        <Route path="/profile" component={MyProfile} />
-        <Route path="/requests" component={Requests} />
+        <Route exact path="/signin" component={Signin} />
+        <Route exact path="/signup" component={Signup} />
+        <Route exact path="/notification" component={Notification} />
+        <Route exact path="/profile" component={MyProfile} />
+        <Route exact path="/requests" component={Requests} />
+        <Route exact path="/discover" component={Discover} />
+        <Route exact path="/post" component={AddPost} />
       </Switch>
     </Router>
   );

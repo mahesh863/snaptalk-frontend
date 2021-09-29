@@ -1,0 +1,12 @@
+.see-more {
+  color: rgb(255, 0, 0);
+  font-weight: bold;
+  padding-top: 300px;
+  cursor: default;
+}
+
+.see-more:hover {
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  padding-top: 300px;
+}

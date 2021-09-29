@@ -1,0 +1,33 @@
+.add-post-base {
+  margin-top: 20px;
+  border: 2px solid black;
+  border-radius: 20px;
+  width: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.loading-div {
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-post-main-base {
+  width: 100%;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-base {
+  width: 280px;
+}
+
+.button-sapn {
+  width: 100%;
+}

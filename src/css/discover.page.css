@@ -1,0 +1,22 @@
+.search-icon {
+  font-size: 25px;
+  color: rgb(31, 31, 31);
+}
+
+.search-icon:hover {
+  font-size: 25px;
+  color: rgb(31, 31, 31);
+  transform: scale(1.2);
+}
+
+.icon-holder {
+  width: 10%;
+  float: right;
+  margin-top: -34px;
+}
+
+.search-input {
+  width: 85%;
+  border-color: black;
+  font-weight: bold;
+}

@@ -1,97 +1,104 @@
-import React, {useState} from 'react'
+import React, { useState } from "react";
 
 //Css
-import "../css/global.css"
-import "../css/signin.css"
-
+import "../css/global.css";
+import "../css/signin.css";
 
 //Reactstrap
-import { Form, FormGroup, Input, Label, Button } from "reactstrap"
-
+import { Form, FormGroup, Input, Label, Button } from "reactstrap";
 
 //Router
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 //API
-import {API} from '../helper/API'
-import axios from 'axios'
+import { API } from "../helper/API";
+import axios from "axios";
 
+const Signup = ({ history }) => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
+  const handelSubmit = () => {
+    axios({
+      method: "POST",
+      url: `${API}/auth/signup`,
+      data: {
+        name: name,
+        email: email,
+        password: password,
+      },
+    })
+      .then((res) => {
+        console.log(res.data);
+        history.push("/signin");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
+  return (
+    <div className="base-div">
+      <div className="container base-container ">
+        <h3 style={{ textAlign: "center" }}>SignUp</h3>
 
-const Signup = () => {
+        <div className="input-div">
+          <Form>
+            <FormGroup style={{ marginTop: "10px" }}>
+              <Label>Name</Label>
 
-    const [name, setName] = useState("")
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [confirmPassword, setConfirmPassword] = useState("")
+              <Input
+                name="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </FormGroup>
 
+            <FormGroup style={{ marginTop: "10px" }}>
+              <Label>Email</Label>
+              <Input
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </FormGroup>
 
-    const handelSubmit = () => {
-        axios({
-            method: "POST",
-            url: `${API}/auth/signup`,
-            data: {
-                name : name,
-                email: email,
-                password: password
-            },
+            <FormGroup style={{ marginTop: "10px" }}>
+              <Label>Password</Label>
 
-        }).then((res) => {
-            console.log(res.data);
+              <Input
+                type="password"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </FormGroup>
 
-        }).catch((err) => {
-            console.log(err);
-        })
+            <FormGroup style={{ marginTop: "10px" }}>
+              <Label>Confirm Password</Label>
+              <Input
+                type="password"
+                name="confirm-password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            </FormGroup>
 
-    }
+            <Button className="buttons" onClick={handelSubmit}>
+              Submit
+            </Button>
+          </Form>
 
-    return (
-        <div className= "base-div" > 
-            <div className= "container base-container " >
-                <h3 style= {{ textAlign: "center" }} >SignUp</h3>
-
-                <div className= "input-div" >
-                    <Form  >
-                         <FormGroup style={{marginTop: "10px"}}>
-                            <Label>Name</Label>
-
-                            <Input name= "name" value= {name} onChange= {(e) => setName(e.target.value)} />
-                        </FormGroup>
-
-
-                        <FormGroup style={{marginTop: "10px"}}>
-                            <Label>Email</Label>
-                            <Input name= "email" value= {email} onChange= {(e) => setEmail(e.target.value)} />
-
-                        </FormGroup>
-
-                         <FormGroup style={{marginTop: "10px"}}>
-                            <Label>Password</Label>
-
-                            <Input type= "password" name= "password"  value= {password} onChange= {(e) => setPassword(e.target.value)}  />
-                        </FormGroup>
-
-
-                        <FormGroup style={{marginTop: "10px"}}>
-                            <Label>Confirm Password
-                            </Label>
-                            <Input type= "password" name = "confirm-password" value= {confirmPassword} onChange= {(e) => setConfirmPassword(e.target.value)}  />
-
-                        </FormGroup>
-
-
-
-                        <Button className= "buttons" onClick= {handelSubmit} >
-                            Submit
-                        </Button>
-                    </Form>
-
-                    <p style= {{ marginTop: "10px" }} >  Already have an account? <Link to="signin" >Signin</Link></p>
-                </div>
-            </div>
+          <p style={{ marginTop: "10px" }}>
+            {" "}
+            Already have an account? <Link to="signin">Signin</Link>
+          </p>
         </div>
-    )
-}
+      </div>
+    </div>
+  );
+};
 
-export default Signup
+export default Signup;
