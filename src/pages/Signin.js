@@ -4,9 +4,6 @@ import React, { useState } from "react";
 import "../css/global.css";
 import "../css/signin.css";
 
-//Social Login
-import GoogleLogin from "react-google-login";
-
 //Reactstrap
 import { Form, FormGroup, Input, Label, Button, Spinner } from "reactstrap";
 
@@ -17,7 +14,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 //Helpers
-import { emailSignin, googleSignin } from "../helper/Calls/Auth";
+import { emailSignin } from "../helper/Calls/Auth";
 
 //Get Profile Helper
 import { getProfile } from "../helper/Calls/MyProfile";

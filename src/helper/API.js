@@ -1,1 +1,1 @@
-export const API = "https://snaptalk-1.herokuapp.com/api/";
+export const API = "http://localhost:8000/api/";
