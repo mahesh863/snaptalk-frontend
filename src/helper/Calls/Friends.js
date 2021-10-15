@@ -30,11 +30,28 @@ export const rejectFollowRequest = (currentUserId, firendsId) => {
 };
 
 export const getAllInteractions = (authToken, currentUserId) => {
-  axios({
+  return axios({
     method: "GET",
     url: `${API}/${currentUserId}/get/friends`,
     headers: {
       authorization: `Bearer ${authToken}`,
     },
+  });
+};
+
+export const suggestedFriends = () => {
+  return axios({
+    method: "GET",
+    url: `${API}/suggested`,
+  });
+};
+
+export const viewUserProfile = (userId) => {
+  return axios({
+    url: `${API}/view/user`,
+    data: {
+      userId: userId,
+    },
+    method: "POST",
   });
 };

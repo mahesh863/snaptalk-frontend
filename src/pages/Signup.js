@@ -5,7 +5,7 @@ import "../css/global.css";
 import "../css/signin.css";
 
 //Reactstrap
-import { Form, FormGroup, Input, Label, Button } from "reactstrap";
+import { Form, FormGroup, Input, Label, Button, Spinner } from "reactstrap";
 
 //Router
 import { Link } from "react-router-dom";
@@ -13,14 +13,17 @@ import { Link } from "react-router-dom";
 //API
 import { API } from "../helper/API";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const Signup = ({ history }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handelSubmit = () => {
+    setLoading(true);
     axios({
       method: "POST",
       url: `${API}/auth/signup`,
@@ -31,11 +34,29 @@ const Signup = ({ history }) => {
       },
     })
       .then((res) => {
-        console.log(res.data);
+        setLoading(false);
+        toast.success("Signup Success!", {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
         history.push("/signin");
       })
       .catch((err) => {
-        console.log(err);
+        setLoading(false);
+        toast.error("Failed To Signup!", {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       });
   };
 
@@ -87,7 +108,7 @@ const Signup = ({ history }) => {
             </FormGroup>
 
             <Button className="buttons" onClick={handelSubmit}>
-              Submit
+              {loading ? <Spinner> </Spinner> : "Submit"}
             </Button>
           </Form>
 

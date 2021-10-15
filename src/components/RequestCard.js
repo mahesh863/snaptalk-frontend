@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 
 //Css
 import "../css/requestCard.component.css";
-import { API } from "../helper/API";
 import {
   cancelFollowRequest,
   sendFollowRequest,
@@ -14,11 +13,16 @@ import {
 import { getProfile } from "../helper/Calls/MyProfile";
 import { updateItemOnLocalStorage } from "../helper/storageOperations";
 
+//React Icons
+import { FaTimes, FaCheck } from "react-icons/fa";
+import { Link } from "react-router-dom";
+
 const RequestCard = ({
   userName = "",
   userId = "",
   profilePic = "",
   sent = false,
+  view = false,
 }) => {
   var defaultProfilePic =
     "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/240px-Circle-icons-profile.svg.png";
@@ -77,7 +81,7 @@ const RequestCard = ({
   const handelAcceptRequest = () => {
     acceptFollowRequest(currentUserId, userId)
       .then((res) => {
-        setAction(1);
+        setAction(2);
         getProfile(currentUserId, token)
           .then((res) => {
             updateItemOnLocalStorage("user", JSON.stringify(res.data.user));
@@ -92,7 +96,7 @@ const RequestCard = ({
   const handelRejectRequest = () => {
     rejectFollowRequest(currentUserId, userId)
       .then((res) => {
-        setAction(0);
+        setAction(1);
 
         getProfile(currentUserId, token)
           .then((res) => {
@@ -121,7 +125,7 @@ const RequestCard = ({
   }, [JSON.parse(localStorage.getItem("user"))]);
 
   return (
-    <div className="request-card-base-div">
+    <div className="request-card-base-div link-style">
       <span>
         <img
           src={profilePic ? profilePic : defaultProfilePic}
@@ -129,74 +133,89 @@ const RequestCard = ({
         />
       </span>
       <span style={{ fontWeight: "bold", width: "40%" }}>
-        {userName.length < 20 ? userName : userName.slice(0, 20) + "..."}
+        <Link to={`/view/${userId}`}>
+          {userName.length < 20 ? userName : userName.slice(0, 20) + "..."}
+        </Link>
       </span>
+      {!view ? (
+        !sent ? (
+          <span>
+            {!action ? (
+              <>
+                <span className="larger-screens">
+                  <span
+                    className="custom-button button-primary-color"
+                    onClick={() => handelAcceptRequest()}
+                  >
+                    {" "}
+                    Confirm{" "}
+                  </span>
+                  <span
+                    className="custom-button button-secondary-color mx-1"
+                    onClick={() => handelRejectRequest()}
+                  >
+                    Reject
+                  </span>
+                </span>
 
-      {!sent ? (
-        <span>
-          {!action ? (
-            <>
+                <span className="mobile-only">
+                  <span className="check" onClick={() => handelAcceptRequest()}>
+                    <FaCheck />
+                  </span>
+                  <span className="cross" onClick={() => handelRejectRequest()}>
+                    <FaTimes />
+                  </span>
+                </span>
+              </>
+            ) : action == 1 ? (
+              <p
+                style={{
+                  color: "red",
+                  fontWeight: "bold",
+                  marginRight: "10px",
+                }}
+              >
+                Rejected...
+              </p>
+            ) : (
+              <p
+                style={{
+                  color: "green",
+                  fontWeight: "bold",
+                  marginRight: "10px",
+                }}
+              >
+                Accepted...
+              </p>
+            )}
+          </span>
+        ) : currentUserId == userId ? (
+          <span className="btn" style={{ visibility: "hidden" }}>
+            Send
+          </span>
+        ) : (
+          <span>
+            {!didSend ? (
               <span
-                className="custom-button button-primary-color mx-0"
-                onClick={handelAcceptRequest}
+                className="custom-button button-primary-color mx-2"
+                onClick={handelSentRequest}
               >
                 {" "}
-                Confirm{" "}
+                Send{" "}
               </span>
+            ) : (
               <span
-                className="custom-button button-secondary-color mx-1"
-                onClick={handelRejectRequest}
+                className="custom-button button-secondary-color mx-2"
+                onClick={handelCancelRequest}
               >
                 {" "}
-                <p
-                  style={{
-                    color: "red",
-                    fontWeight: "bold",
-                    marginRight: "10px",
-                  }}
-                >
-                  Rejected...
-                </p>
+                Cancel{" "}
               </span>
-            </>
-          ) : action == 0 ? (
-            "Rejected..."
-          ) : (
-            <p
-              style={{
-                color: "green",
-                fontWeight: "bold",
-                marginRight: "10px",
-              }}
-            >
-              Accepted...
-            </p>
-          )}
-        </span>
-      ) : currentUserId == userId ? (
-        <span className="btn" style={{ visibility: "hidden" }}>
-          Send
-        </span>
+            )}
+          </span>
+        )
       ) : (
-        <span>
-          {!didSend ? (
-            <span
-              className="custom-button button-primary-color mx-2"
-              onClick={handelSentRequest}
-            >
-              {" "}
-              Send{" "}
-            </span>
-          ) : (
-            <span
-              className="custom-button button-secondary-color mx-2"
-              onClick={handelCancelRequest}
-            >
-              {" "}
-              Cancel{" "}
-            </span>
-          )}
-        </span>
+        <span></span>
       )}
     </div>
   );

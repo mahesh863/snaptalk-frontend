@@ -2,23 +2,22 @@ import { useEffect, useState } from "react";
 import { Spinner } from "reactstrap";
 import Posts from "../components/Posts";
 import { generateFeeds } from "../helper/Calls/Feeds";
+import { getAllInteractions } from "../helper/Calls/Friends";
 
 const Home = ({ history }) => {
   const [user, setuser] = useState(false);
   const [loading, setLoading] = useState(true);
   const [feeds, setFeeds] = useState([]);
 
+  //Shuffle Posts Before Showing To The User
   const shuffle = (array) => {
     let currentIndex = array.length,
       randomIndex;
 
-    // While there remain elements to shuffle...
     while (currentIndex != 0) {
-      // Pick a remaining element...
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex--;
 
-      // And swap it with the current element.
       [array[currentIndex], array[randomIndex]] = [
         array[randomIndex],
         array[currentIndex],
@@ -27,11 +26,11 @@ const Home = ({ history }) => {
 
     return array;
   };
-
-  useEffect(() => {
+  //Preloading User Data
+  const getUserData = () => {
     const currentUser = JSON.parse(localStorage.getItem("userId"));
     const token = localStorage.getItem("token");
-
+    //Checking if User Exists And Loading Information
     if (currentUser) {
       setuser(true);
       generateFeeds(currentUser, token)
@@ -41,15 +40,28 @@ const Home = ({ history }) => {
           setLoading(false);
         })
         .catch((err) => console.log(err));
+      getAllInteractions(token, currentUser)
+        .then((res) => {
+          console.log();
+          localStorage.setItem("followers", JSON.stringify(res.data.user));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     } else {
       setuser(false);
+      // Redirecting User To Singin Page
       history.push("/signin");
     }
+  };
+
+  useEffect(() => {
+    getUserData();
   }, []);
 
   return (
     <div className="container base-div ">
-      {console.log(feeds)}
+      {/* Spinner While Posts Are Loading */}
       {loading && (
         <div className="spinner-div">
           <Spinner> </Spinner>
@@ -58,6 +70,7 @@ const Home = ({ history }) => {
       {!loading && (
         <div className="row">
           <div className="col-lg-5 col-md-9 offset-md-2 col-sm-12  offset-lg-4">
+            {/* Looping Through User Feeds */}
             {user ? (
               feeds.length === 0 ? (
                 <h2 className="text-center">No Feeds Found</h2>
@@ -65,7 +78,7 @@ const Home = ({ history }) => {
                 feeds.map((feed) => (
                   <Posts
                     image={feed.image}
-                    likes={feed.likes.length}
+                    likes={feed.likes}
                     totalComments={feed.comments.length}
                     postId={feed._id}
                     userName={feed.posted_by.name}

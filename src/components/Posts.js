@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 //Css
 import "../css/posts.component.css";
@@ -12,6 +12,7 @@ import { Form, Input } from "reactstrap";
 
 // API Helpers
 import { likePhoto, unlikePhoto } from "../helper/Calls/Posts";
+import { toast } from "react-toastify";
 
 const Posts = ({
   image,
@@ -22,7 +23,7 @@ const Posts = ({
   profilePic,
 }) => {
   const [liked, setLiked] = useState(false);
-  const [totalLikes, setTotalLikes] = useState(likes);
+  const [totalLikes, setTotalLikes] = useState(likes.length);
   var defaultProfilePic =
     "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/240px-Circle-icons-profile.svg.png";
 
@@ -58,6 +59,19 @@ const Posts = ({
       });
   };
 
+  const handelComments = () => {
+    toast.warn("Comments Has Been Turned Off For Now");
+  };
+
+  useEffect(() => {
+    const userId = JSON.parse(localStorage.getItem("userId"));
+    likes.map((like) => {
+      if (like == userId) {
+        setLiked(true);
+      }
+    });
+  }, []);
+
   return (
     <div className="post-base">
       <div className="my-2 profile-info-div ">
@@ -91,7 +105,7 @@ const Posts = ({
             <Input className="form-input" placeholder="Comment..." />
           </span>
           <span className="send-icon">
-            <BiSend className="icon" />
+            <BiSend className="icon" onClick={handelComments} />
           </span>
         </Form>
       </div>

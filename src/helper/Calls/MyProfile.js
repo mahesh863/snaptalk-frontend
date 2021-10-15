@@ -36,11 +36,23 @@ export const deleteProfile = (userId, token) => {
 };
 
 //Get All Post
-
 export const getAllPost = (userId, token) => {
   return axios({
     url: `${API}/${userId}/get/post`,
     method: "GET",
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+//Change Profile Pic
+
+export const addNewProfilePic = (userId, token, data) => {
+  return axios({
+    url: `${API}/${userId}/profile/image`,
+    method: "PUT",
+    data: data,
     headers: {
       authorization: `Bearer ${token}`,
     },

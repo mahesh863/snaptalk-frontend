@@ -8,7 +8,7 @@ import "../css/signin.css";
 import GoogleLogin from "react-google-login";
 
 //Reactstrap
-import { Form, FormGroup, Input, Label, Button } from "reactstrap";
+import { Form, FormGroup, Input, Label, Button, Spinner } from "reactstrap";
 
 //Router
 import { Link } from "react-router-dom";
@@ -21,7 +21,6 @@ import { emailSignin, googleSignin } from "../helper/Calls/Auth";
 
 //Get Profile Helper
 import { getProfile } from "../helper/Calls/MyProfile";
-import { getAllInteractions } from "../helper/Calls/Friends";
 
 //dotenv
 require("dotenv").config();
@@ -29,11 +28,15 @@ require("dotenv").config();
 const Signin = ({ history }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handelSubmit = () => {
+    setLoading(true);
     emailSignin(email, password)
       .then((res) => {
         console.log(res.data);
+        setLoading(false);
+
         localStorage.setItem("userId", JSON.stringify(res.data?.userId));
         localStorage.setItem("token", res.data?.token);
 
@@ -45,6 +48,8 @@ const Signin = ({ history }) => {
           .catch((err) => console.log(err));
       })
       .catch((err) => {
+        setLoading(false);
+
         if (err) {
           toast.error("Failed To Signin", {
             position: "top-center",
@@ -58,60 +63,6 @@ const Signin = ({ history }) => {
           console.log(err);
         }
       });
-  };
-
-  const onSuccess = (googleData) => {
-    googleSignin(googleData.tokenId)
-      .then((res) => {
-        if (res.data) {
-          localStorage.setItem("userId", JSON.stringify(res.data?.userId));
-          localStorage.setItem("token", res.data?.token);
-
-          getProfile(res.data?.userId, res.data?.token)
-            .then((res) => {
-              localStorage.setItem("user", JSON.stringify(res.data.user));
-              toast.success("SignIn Successful!", {
-                position: "top-center",
-                autoClose: 1500,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-              });
-
-              history.push("/");
-            })
-            .catch((err) => console.log(err));
-        }
-      })
-      .catch((err) => {
-        if (err) {
-          toast.error("Failed To Signin", {
-            position: "top-center",
-            autoClose: 1500,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
-          console.log(err);
-        }
-      });
-  };
-
-  const onFailure = (err) => {
-    toast.error("Please Try Again!", {
-      position: "top-center",
-      autoClose: 1500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-    history.push("/signup");
   };
 
   return (
@@ -142,23 +93,18 @@ const Signin = ({ history }) => {
           </Form>
 
           <Button className="buttons" onClick={handelSubmit}>
-            Submit
+            {loading ? <Spinner> </Spinner> : "Submit"}
           </Button>
           <p style={{ marginTop: "10px" }}>
             Don't have an account? <Link to="signup">Signup</Link>
           </p>
-
-          <p style={{ textAlign: "center", marginTop: "10px" }}>OR</p>
-
-          <GoogleLogin
-            disabled={false}
-            className="buttons"
-            clientId="163781510653-o7996ee5f0scidi1fdcdel6l868fffn5.apps.googleusercontent.com"
-            buttonText="Login With Google"
-            isSignedIn={true}
-            onSuccess={onSuccess}
-            onFailure={onFailure}
-          />
+        </div>
+        <div className="border p-2">
+          <p>Test Login Details:</p>
+          <div className="my-2">
+            <p style={{ fontWeight: "bold" }}>Email: testuser@snaptalk.com</p>
+            <p style={{ fontWeight: "bold" }}>Password: Password@123</p>
+          </div>
         </div>
       </div>
     </div>

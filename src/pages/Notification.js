@@ -6,15 +6,20 @@ import "../css/notification.page.css";
 import { getAllNotification } from "../helper/Calls/Notification";
 
 const Notification = ({ history }) => {
+  //Show Notifications
   const [notification, setNotification] = useState("");
 
   const getUserAndNotification = () => {
+    //Getting User info from localstorage
     const userId = JSON.parse(localStorage.getItem("userId"));
     const token = localStorage.getItem("token");
     console.log(token);
+    //Redirecting User If not Singed In
     if (!userId) {
       history.push("/signin");
     }
+
+    //API call for getting user's notifications
     getAllNotification(userId, token)
       .then((response) => {
         console.log(response.data);
@@ -28,9 +33,9 @@ const Notification = ({ history }) => {
   }, []);
 
   return (
-    <div className="container col-lg-4 offset-lg-4 ">
+    <div className="container">
       <h1 className="my-3 text-center">Notification</h1>
-
+      {/* Displaying Notifications */}
       <div>
         {notification ? (
           notification.map((notify) => (

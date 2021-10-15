@@ -21,10 +21,13 @@ const AddPost = ({ history }) => {
 
   const handelAdd = () => {
     setloading(true);
+
+    //Setting up form data to send to backend
     const formData = new FormData();
     formData.append("postImage", image, image.name);
     formData.append("captions", caption);
 
+    //API Call
     axios({
       url: `${API}/create/post/${userId}`,
       method: "POST",
@@ -35,7 +38,9 @@ const AddPost = ({ history }) => {
     })
       .then((res) => {
         setloading(false);
+        //Redirecting User
         history.push("/");
+        //Showing Toast
         toast.success("Post Added Successfully!", {
           position: "top-right",
           autoClose: 2000,
@@ -47,7 +52,7 @@ const AddPost = ({ history }) => {
         });
       })
       .catch((err) => {
-        console.log(err);
+        //Handeling Eror In API Request
         setloading(false);
         toast.error("Failed To Add Post!", {
           position: "top-right",
@@ -62,12 +67,14 @@ const AddPost = ({ history }) => {
   };
 
   useEffect(() => {
+    //Setting User Data For  Easy Access
     let user = JSON.parse(localStorage.getItem("userId"));
 
     if (user) {
       setUserId(user);
       setToken(localStorage.getItem("token"));
     } else {
+      //Redirecting User If Not Authenticated
       history.push("/signin");
     }
   }, []);
@@ -75,6 +82,7 @@ const AddPost = ({ history }) => {
   return (
     <>
       {loading ? (
+        // Show Spinner While Waiting for API response
         <div className="loading-div">
           <Spinner type="grow" className="mx-1" color="primary">
             {" "}
@@ -89,9 +97,9 @@ const AddPost = ({ history }) => {
       ) : (
         <>
           <h1 className="text-center p-1">Add Post</h1>
-
           <div className="container add-post-main-base ">
-            <div className="add-post-base  ">
+            <div className="add-post-base">
+              {/* Post From */}
               <Form className="p-3">
                 <Input
                   type="file"
