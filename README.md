@@ -1,9 +1,6 @@
 # This app has been made with React , Node and MongoDB
 
 
-## Demo
-https://socialapp-5ec19.firebaseapp.com/
-
 
 ## Backend Codes Can be Found Here
 https://github.com/mahesh863/snapTalk-backend
